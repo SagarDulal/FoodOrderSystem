@@ -1,0 +1,72 @@
+<%- include('../_layouts/adminsidebar') %>
+
+<% if(orders!== null){  %>
+
+<table class="table table-striped alignmiddle">
+    
+    <tr>
+        <!-- <th>Image</th> -->
+        <th>Order</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>User</th>
+    
+    
+    </tr>
+    <% var i = 0; %>
+    <% orders.forEach(function(order){ %>
+        <% i++ %>
+    <tr>
+        <!-- <td>    <li>  <img src="<%= order.data.image_name_0%>" height="150px" width= "150px" alt=""></li>    
+               <li><img src="<%= order.data.image_name_1%>" height="150px" width="150px"></li>
+                    <li><img src="<%= order.data.image_name_2%>" height="150px" width="150px"></li> 
+        </td> -->
+        
+        <td>
+         <li><%= order.data.item_name_0%></li> 
+        <li> <%= order.data.item_name_1%></li> 
+        <li> <%= order.data.item_name_2%></li>
+        </td>
+        <td>
+           <li> <%= order.data.amount_0%></li>
+        </li><%= order.data.amount_1%></li>
+        </li><%= order.data.amount_2%></li>
+    </td>
+        <td >
+           <li> <%= order.data.quantity_0%></li>
+       <li > <%= order.data.quantity_1%></li>
+       <li> <%= order.data.quantity_2%></li>
+    </td>
+        <td><%= order.data.username%></td>
+    </tr>
+
+        <% }); %>
+
+    </tr>
+    
+</table>
+
+<br>
+
+<% }else { %>
+<h1>no orders are found</h1
+<% } %>
+
+
+
+<script>
+$(function() {
+   
+    $('a.complete').on('click', function () {
+        if (!confirm('Confirm complete order'))
+            return false;
+    });
+        
+});
+
+$("img").on("error", function() {
+  $(this).hide();
+});
+
+
+</script>

@@ -1,0 +1,43 @@
+
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/adminsidebar/style.css">
+<link rel="stylesheet" href="/css/style.css">
+<div class="container-fluid display-table">
+    <div class="row display-table-row">
+        <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation">
+            <div class="logo">
+                <a hef="home.html"><img src="https://tse2.mm.bing.net/th?id=OIP.WGxKfziBwzVumST-nlKPaQHaEK&pid=Api&P=0&w=274&h=155" alt="merkery_logo" class="hidden-xs hidden-sm">
+                    <img src="http://jskrishna.com/work/merkury/images/circle-logo.png" alt="merkery_logo" class="visible-xs visible-sm circle-logo">
+                </a>
+            </div>
+            <div class="navi">
+                <ul>
+                    <li class="active"><a href="/admin/pages"><i class="fa fa-home" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Pages</span></a></li>
+                    <li><a href="/admin/products"><i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Products</span></a></li>
+                    <li><a href="/admin/categories"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Categories</span></a></li>
+                    <li><a href="/admin/vieworders"><i class="fa fa-laptop" aria-hidden="true"></i><span class="hidden-xs hidden-sm">View Orders</span></a></li>
+                    <li><a href="/users/logout"><i class="fa fa-trophy" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Logout</span></a></li>
+                    <!-- <li><a href="/admin/formdata"><i class="fa fa-list-alt" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Complete</span></a></li> -->
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-10 col-sm-11 display-table-cell v-align">
+            <div class="row">
+                <header>
+                    <div class="col-md-7">
+                        <nav class="navbar-default pull-left">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="offcanvas" data-target="#side-menu" aria-expanded="false">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                            </div>
+                        </nav>
+                    </div>
+                    <%- include('../_layouts/newtry') %>
+
+                </header>
+            </div>
+
