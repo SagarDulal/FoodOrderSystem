@@ -142,7 +142,7 @@ const postAdminEditPage = async (req,res)=>{
                 });
             } else {
 
-              await  Page.findById(id, function (err, page) {
+                Page.findById(id, function (err, page) {
                     if (err)
                         return console.log(err);
 

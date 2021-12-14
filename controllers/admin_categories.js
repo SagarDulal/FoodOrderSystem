@@ -52,7 +52,7 @@ const postAddCategory = async (req,res)=>{
                     if (err)
                         return console.log(err);
 
-                  await  Category.find(function (err, categories) {
+                    Category.find(function (err, categories) {
                         if (err) {
                             console.log(err);
                         } else {
@@ -95,7 +95,7 @@ const postEditCategory = async (req,res)=>{
             id: id
         });
     } else {
-       await Category.findOne({slug: slug, _id: {'$ne': id}}, function (err, category) {
+        Category.findOne({slug: slug, _id: {'$ne': id}}, function (err, category) {
             if (category) {
                 req.flash('danger', 'Category title exists, choose another.');
                 res.render('admin/edit_category', {
@@ -103,7 +103,7 @@ const postEditCategory = async (req,res)=>{
                     id: id
                 });
             } else {
-                await Category.findById(id, function (err, category) {
+                 Category.findById(id, function (err, category) {
                     if (err)
                         return console.log(err);
 
@@ -139,7 +139,7 @@ const getDeleteCategory = async (req,res)=>{
         if (err)
             return console.log(err);
 
-            await Category.find(function (err, categories) {
+             Category.find(function (err, categories) {
             if (err) {
                 console.log(err);
             } else {

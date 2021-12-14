@@ -21,7 +21,7 @@ const getProductByCategory =async (req,res)=>{
     const categorySlug = req.params.category;
 
     await Category.findOne({slug: categorySlug}, function (err, c) {
-        await Product.find({category: categorySlug}, function (err, products) {
+     Product.find({category: categorySlug}, function (err, products) {
             if (err)
                 console.log(err);
 

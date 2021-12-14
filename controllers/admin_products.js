@@ -6,11 +6,11 @@ const Product = require('../models/product')
 const getProduct = async (req,res)=>{
     let count;
 
-    Product.count(function (err, c) {
+    await Product.count(function (err, c) {
         count = c;
     });
 
-    await Product.find(function (err, products) {
+    await Product.find({}).sort({_id:-1}).exec(function (err, products) {
         res.render('admin/products', {
             products: products,
             count: count
@@ -120,7 +120,7 @@ const postAddProduct =async (req,res)=>{
 }
 const getEditProduct =async (req,res)=>{
 
-    const errors;
+    var errors;
 
     if (req.session.errors)
         errors = req.session.errors;
@@ -128,7 +128,7 @@ const getEditProduct =async (req,res)=>{
 
     await Category.find(function (err, categories) {
 
-        await Product.findById(req.params.id, function (err, p) {
+         Product.findById(req.params.id, function (err, p) {
             if (err) {
                 console.log(err);
                 res.redirect('/admin/products');
