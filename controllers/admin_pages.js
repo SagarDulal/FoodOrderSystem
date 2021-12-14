@@ -12,9 +12,9 @@ const getAdminPage = (req,res)=>{
 
 
 const getAdminAddPage = (req,res)=>{
-    var title = "";
-    var slug = "";
-    var content = "";
+    const title = "";
+    const slug = "";
+    const content = "";
 
     res.render('admin/add_page', {
         title: title,
@@ -23,17 +23,17 @@ const getAdminAddPage = (req,res)=>{
     });
 }
 
-const postAdminAddPage = (req,res)=>{
+const postAdminAddPage = async (req,res)=>{
     req.checkBody('title', 'Title must have a value.').notEmpty();
     req.checkBody('content', 'Content must have a value.').notEmpty();
 
-    var title = req.body.title;
-    var slug = req.body.slug.replace(/\s+/g, '-').toLowerCase();
+    const title = req.body.title;
+    const slug = req.body.slug.replace(/\s+/g, '-').toLowerCase();
     if (slug == "")
         slug = title.replace(/\s+/g, '-').toLowerCase();
-    var content = req.body.content;
+    const content = req.body.content;
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
 
     if (errors) {
         res.render('admin/add_page', {
@@ -43,7 +43,7 @@ const postAdminAddPage = (req,res)=>{
             content: content
         });
     } else {
-        Page.findOne({slug: slug}, function (err, page) {
+        await Page.findOne({slug: slug}, function (err, page) {
             if (page) {
                 req.flash('danger', 'Page slug exists, choose another.');
                 res.render('admin/add_page', {
@@ -52,7 +52,7 @@ const postAdminAddPage = (req,res)=>{
                     content: content
                 });
             } else {
-                var page = new Page({
+                const page = new Page({
                     title: title,
                     slug: slug,
                     content: content,
@@ -82,7 +82,7 @@ const postAdminAddPage = (req,res)=>{
 
 
 const reorderPage = (req,res)=>{
-    var ids = req.body['id[]'];
+    const ids = req.body['id[]'];
 
     sortPages(ids, function () {
         Page.find({}).sort({sorting: 1}).exec(function (err, pages) {
@@ -109,18 +109,18 @@ const getAdminEditPage = (req,res)=>{
         });
     });
 }
-const postAdminEditPage = (req,res)=>{
+const postAdminEditPage = async (req,res)=>{
     req.checkBody('title', 'Title must have a value.').notEmpty();
     req.checkBody('content', 'Content must have a value.').notEmpty();
 
-    var title = req.body.title;
-    var slug = req.body.slug.replace(/\s+/g, '-').toLowerCase();
+    const title = req.body.title;
+    const slug = req.body.slug.replace(/\s+/g, '-').toLowerCase();
     if (slug == "")
         slug = title.replace(/\s+/g, '-').toLowerCase();
-    var content = req.body.content;
-    var id = req.params.id;
+    const content = req.body.content;
+    const id = req.params.id;
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
 
     if (errors) {
         res.render('admin/edit_page', {
@@ -131,7 +131,7 @@ const postAdminEditPage = (req,res)=>{
             id: id
         });
     } else {
-        Page.findOne({slug: slug, _id: {'$ne': id}}, function (err, page) {
+      await  Page.findOne({slug: slug, _id: {'$ne': id}}, function (err, page) {
             if (page) {
                 req.flash('danger', 'Page slug exists, choose another.');
                 res.render('admin/edit_page', {
@@ -142,7 +142,7 @@ const postAdminEditPage = (req,res)=>{
                 });
             } else {
 
-                Page.findById(id, function (err, page) {
+              await  Page.findById(id, function (err, page) {
                     if (err)
                         return console.log(err);
 
@@ -176,8 +176,8 @@ const postAdminEditPage = (req,res)=>{
 
     
 }
-const getDeletePage = (req,res)=>{
-    Page.findByIdAndRemove(req.params.id, function (err) {
+const getDeletePage = async (req,res)=>{
+  await  Page.findByIdAndRemove(req.params.id, function (err) {
         if (err)
             return console.log(err);
 

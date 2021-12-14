@@ -1,12 +1,12 @@
-var fs = require('fs-extra');
-var auth = require('../config/auth');
+const fs = require('fs-extra');
+// const auth = require('../config/auth');
 
-var Product = require('../models/product');
-var Category = require('../models/category');
+const Product = require('../models/product');
+const Category = require('../models/category');
 
 
-const getAllProducts =(req,res)=>{
-    Product.find(function (err, products) {
+const getAllProducts = async (req,res)=>{
+   await Product.find(function (err, products) {
         if (err)
             console.log(err);
 
@@ -17,11 +17,11 @@ const getAllProducts =(req,res)=>{
     });
 }
 
-const getProductByCategory =(req,res)=>{
-    var categorySlug = req.params.category;
+const getProductByCategory =async (req,res)=>{
+    const categorySlug = req.params.category;
 
-    Category.findOne({slug: categorySlug}, function (err, c) {
-        Product.find({category: categorySlug}, function (err, products) {
+    await Category.findOne({slug: categorySlug}, function (err, c) {
+        await Product.find({category: categorySlug}, function (err, products) {
             if (err)
                 console.log(err);
 
@@ -35,15 +35,15 @@ const getProductByCategory =(req,res)=>{
 }
 
 
-const getProductDetails =(req,res)=>{
-    var galleryImages = null;
-    var loggedIn = (req.isAuthenticated()) ? true : false;
+const getProductDetails =async (req,res)=>{
+    const galleryImages = null;
+    const loggedIn = (req.isAuthenticated()) ? true : false;
 
-    Product.findOne({slug: req.params.product}, function (err, product) {
+    await Product.findOne({slug: req.params.product}, function (err, product) {
         if (err) {
             console.log(err);
         } else {
-            var galleryDir = 'public/product_images/' + product._id + '/gallery';
+            const galleryDir = 'public/product_images/' + product._id + '/gallery';
 
             fs.readdir(galleryDir, function (err, files) {
                 if (err) {

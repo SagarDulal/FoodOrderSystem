@@ -1,8 +1,8 @@
-var Product = require('../models/product');
-const getAddProduct = (req,res)=>{
-    var slug = req.params.product;
+const Product = require('../models/product');
+const getAddProduct = async (req,res)=>{
+    const slug = req.params.product;
 
-    Product.findOne({slug: slug}, function (err, p) {
+   await Product.findOne({slug: slug}, function (err, p) {
         if (err)
             console.log(err);
 
@@ -15,10 +15,10 @@ const getAddProduct = (req,res)=>{
                 image: '/product_images/' + p._id + '/' + p.image
             });
         } else {
-            var cart = req.session.cart;
-            var newItem = true;
+            const cart = req.session.cart;
+            const newItem = true;
 
-            for (var i = 0; i < cart.length; i++) {
+            for (const i = 0; i < cart.length; i++) {
                 if (cart[i].title == slug) {
                     cart[i].qty++;
                     newItem = false;
@@ -56,12 +56,12 @@ const getCheckout = (req,res)=>{
 }
 
 
-const getUpdateProduct = (req,res)=>{
-    var slug = req.params.product;
-    var cart = req.session.cart;
-    var action = req.query.action;
+const getUpdateProduct = async (req,res)=>{
+    const slug = req.params.product;
+    const cart = req.session.cart;
+    const action = req.query.action;
 
-    for (var i = 0; i < cart.length; i++) {
+    for (const i = 0; i < cart.length; i++) {
         if (cart[i].title == slug) {
             switch (action) {
                 case "add":

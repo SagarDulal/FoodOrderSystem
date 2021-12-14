@@ -14,7 +14,7 @@ router.get('/', isAdmin, adminPageController.getAdminPage)
 /*
  * GET add page
  */
-router.get('/add-page', isAdmin, adminPageController.getAdminAddPage)
+router.get('/add-page',isAdmin, adminPageController.getAdminAddPage)
 
 /*
  * POST add page

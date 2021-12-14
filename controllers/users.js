@@ -9,13 +9,13 @@ const getUserRegister = (req,res)=>{
     });
 }
 
-const postUserRegister = (req,res)=>{
+const postUserRegister = async (req,res)=>{
 
-    var name = req.body.name;
-    var email = req.body.email;
-    var username = req.body.username;
-    var password = req.body.password;
-    var password2 = req.body.password2;
+    const name = req.body.name;
+    const email = req.body.email;
+    const username = req.body.username;
+    const password = req.body.password;
+    const password2 = req.body.password2;
 
     req.checkBody('name', 'Name is required!').notEmpty();
     req.checkBody('email', 'Email is required!').isEmail();
@@ -23,7 +23,7 @@ const postUserRegister = (req,res)=>{
     req.checkBody('password', 'Password is required!').notEmpty();
     req.checkBody('password2', 'Passwords do not match!').equals(password);
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
 
     if (errors) {
         res.render('register', {
@@ -32,7 +32,7 @@ const postUserRegister = (req,res)=>{
             title: 'Register'
         });
     } else {
-        User.findOne({username: username}, function (err, user) {
+       await User.findOne({username: username}, function (err, user) {
             if (err)
                 console.log(err);
 
@@ -40,7 +40,7 @@ const postUserRegister = (req,res)=>{
                 req.flash('danger', 'Username exists, choose another!');
                 res.redirect('/users/register');
             } else {
-                var user = new User({
+                const user = new User({
                     name: name,
                     email: email,
                     username: username,

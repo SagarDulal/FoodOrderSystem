@@ -1,30 +1,29 @@
-var mkdirp = require('mkdirp');
-var fs = require('fs-extra');
+const mkdirp = require('mkdirp');
+const fs = require('fs-extra');
 
 const Category = require('../models/category')
-// const Page = require('../models/page')
 const Product = require('../models/product')
-const getProduct = (req,res)=>{
+const getProduct = async (req,res)=>{
     let count;
 
     Product.count(function (err, c) {
         count = c;
     });
 
-    Product.find(function (err, products) {
+    await Product.find(function (err, products) {
         res.render('admin/products', {
             products: products,
             count: count
         });
     });
 }
-const getAddProduct =(req,res)=>{
+const getAddProduct =async (req,res)=>{
     
-    var title = "";
-    var desc = "";
-    var price = "";
+    const title = "";
+    const desc = "";
+    const price = "";
 
-    Category.find(function (err, categories) {
+    await Category.find(function (err, categories) {
         res.render('admin/add_product', {
             title: title,
             desc: desc,
@@ -35,24 +34,24 @@ const getAddProduct =(req,res)=>{
 
 
 }
-const postAddProduct =(req,res)=>{
-    var imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
+const postAddProduct =async (req,res)=>{
+    const imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
 
     req.checkBody('title', 'Title must have a value.').notEmpty();
     req.checkBody('desc', 'Description must have a value.').notEmpty();
     req.checkBody('price', 'Price must have a value.').isDecimal();
     req.checkBody('image', 'You must upload an image').isImage(imageFile);
 
-    var title = req.body.title;
-    var slug = title.replace(/\s+/g, '-').toLowerCase();
-    var desc = req.body.desc;
-    var price = req.body.price;
-    var category = req.body.category;
+    const title = req.body.title;
+    const slug = title.replace(/\s+/g, '-').toLowerCase();
+    const desc = req.body.desc;
+    const price = req.body.price;
+    const category = req.body.category;
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
 
     if (errors) {
-        Category.find(function (err, categories) {
+       await  Category.find(function (err, categories) {
             res.render('admin/add_product', {
                 errors: errors,
                 title: title,
@@ -62,7 +61,7 @@ const postAddProduct =(req,res)=>{
             });
         });
     } else {
-        Product.findOne({slug: slug}, function (err, product) {
+      await  Product.findOne({slug: slug}, function (err, product) {
             if (product) {
                 req.flash('danger', 'Product title exists, choose another.');
                 Category.find(function (err, categories) {
@@ -75,9 +74,9 @@ const postAddProduct =(req,res)=>{
                 });
             } else {
 
-                var price2 = parseFloat(price).toFixed(2);
+                const price2 = parseFloat(price).toFixed(2);
 
-                var product = new Product({
+                const product = new Product({
                     title: title,
                     slug: slug,
                     desc: desc,
@@ -103,8 +102,8 @@ const postAddProduct =(req,res)=>{
                     });
 
                     if (imageFile != "") {
-                        var productImage = req.files.image;
-                        var path = 'public/product_images/' + product._id + '/' + imageFile;
+                        const productImage = req.files.image;
+                        const path = 'public/product_images/' + product._id + '/' + imageFile;
 
                         productImage.mv(path, function (err) {
                             return console.log(err);
@@ -119,23 +118,23 @@ const postAddProduct =(req,res)=>{
     }
 
 }
-const getEditProduct =(req,res)=>{
+const getEditProduct =async (req,res)=>{
 
-    var errors;
+    const errors;
 
     if (req.session.errors)
         errors = req.session.errors;
     req.session.errors = null;
 
-    Category.find(function (err, categories) {
+    await Category.find(function (err, categories) {
 
-        Product.findById(req.params.id, function (err, p) {
+        await Product.findById(req.params.id, function (err, p) {
             if (err) {
                 console.log(err);
                 res.redirect('/admin/products');
             } else {
-                var galleryDir = 'public/product_images/' + p._id + '/gallery';
-                var galleryImages = null;
+                const galleryDir = 'public/product_images/' + p._id + '/gallery';
+                const galleryImages = null;
 
                 fs.readdir(galleryDir, function (err, files) {
                     if (err) {
@@ -163,30 +162,30 @@ const getEditProduct =(req,res)=>{
 
     
 }
-const postEditProduct =(req,res)=>{
+const postEditProduct =async (req,res)=>{
     
-    var imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
+    const imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
 
     req.checkBody('title', 'Title must have a value.').notEmpty();
     req.checkBody('desc', 'Description must have a value.').notEmpty();
     req.checkBody('price', 'Price must have a value.').isDecimal();
     req.checkBody('image', 'You must upload an image').isImage(imageFile);
 
-    var title = req.body.title;
-    var slug = title.replace(/\s+/g, '-').toLowerCase();
-    var desc = req.body.desc;
-    var price = req.body.price;
-    var category = req.body.category;
-    var pimage = req.body.pimage;
-    var id = req.params.id;
+    const title = req.body.title;
+    const slug = title.replace(/\s+/g, '-').toLowerCase();
+    const desc = req.body.desc;
+    const price = req.body.price;
+    const category = req.body.category;
+    const pimage = req.body.pimage;
+    const id = req.params.id;
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
 
     if (errors) {
         req.session.errors = errors;
         res.redirect('/admin/products/edit-product/' + id);
     } else {
-        Product.findOne({slug: slug, _id: {'$ne': id}}, function (err, p) {
+      await  Product.findOne({slug: slug, _id: {'$ne': id}}, function (err, p) {
             if (err)
                 console.log(err);
 
@@ -219,8 +218,8 @@ const postEditProduct =(req,res)=>{
                                 });
                             }
 
-                            var productImage = req.files.image;
-                            var path = 'public/product_images/' + id + '/' + imageFile;
+                            const productImage = req.files.image;
+                            const path = 'public/product_images/' + id + '/' + imageFile;
 
                             productImage.mv(path, function (err) {
                                 return console.log(err);
@@ -239,9 +238,9 @@ const postEditProduct =(req,res)=>{
 
     
 }
-const getDeleteProduct =(req,res)=>{
-    var id = req.params.id;
-    var path = 'public/product_images/' + id;
+const getDeleteProduct =async (req,res)=>{
+    const id = req.params.id;
+    const path = 'public/product_images/' + id;
 
     fs.remove(path, function (err) {
         if (err) {

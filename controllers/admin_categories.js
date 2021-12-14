@@ -1,11 +1,11 @@
 const Category = require('../models/category')
-var auth = require('../config/auth');
-var isAdmin = auth.isAdmin;
+const auth = require('../config/auth');
+const isAdmin = auth.isAdmin;
 
 
 
-const getCategory = (req,res)=>{
-    Category.find( (err, categories) =>{
+const getCategory = async (req,res)=>{
+  await  Category.find( (err, categories) =>{
         if (err)
             return console.log(err);
         res.render('admin/categories', {
@@ -15,20 +15,20 @@ const getCategory = (req,res)=>{
 }
 
 const getAddCategory = (req,res)=>{
-    var title = "";
+    const title = "";
     res.render('admin/add_category', {
         title: title
     });
 }
 
-const postAddCategory = (req,res)=>{
+const postAddCategory = async (req,res)=>{
 
     req.checkBody('title', 'Title must have a value.').notEmpty();
 
-    var title = req.body.title;
-    var slug = title.replace(/\s+/g, '-').toLowerCase();
+    const title = req.body.title;
+    const slug = title.replace(/\s+/g, '-').toLowerCase();
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
 
     if (errors) {
         res.render('admin/add_category', {
@@ -36,14 +36,14 @@ const postAddCategory = (req,res)=>{
             title: title
         });
     } else {
-        Category.findOne({slug: slug}, function (err, category) {
+      await  Category.findOne({slug: slug}, function (err, category) {
             if (category) {
                 req.flash('danger', 'Category title exists, choose another.');
                 res.render('admin/add_category', {
                     title: title
                 });
             } else {
-                var category = new Category({
+                const category = new Category({
                     title: title,
                     slug: slug
                 });
@@ -52,7 +52,7 @@ const postAddCategory = (req,res)=>{
                     if (err)
                         return console.log(err);
 
-                    Category.find(function (err, categories) {
+                  await  Category.find(function (err, categories) {
                         if (err) {
                             console.log(err);
                         } else {
@@ -67,9 +67,9 @@ const postAddCategory = (req,res)=>{
         });
     }    
 }
-const getEditCategory = (req,res)=>{
+const getEditCategory = async (req,res)=>{
     
-    Category.findById(req.params.id, function (err, category) {
+   await Category.findById(req.params.id, function (err, category) {
         if (err)
             return console.log(err);
 
@@ -79,14 +79,14 @@ const getEditCategory = (req,res)=>{
         });
     });
 }
-const postEditCategory = (req,res)=>{
+const postEditCategory = async (req,res)=>{
     req.checkBody('title', 'Title must have a value.').notEmpty();
 
-    var title = req.body.title;
-    var slug = title.replace(/\s+/g, '-').toLowerCase();
-    var id = req.params.id;
+    const title = req.body.title;
+    const slug = title.replace(/\s+/g, '-').toLowerCase();
+    const id = req.params.id;
 
-    var errors = req.validationErrors();
+    const errors = req.validationErrors();
 
     if (errors) {
         res.render('admin/edit_category', {
@@ -95,7 +95,7 @@ const postEditCategory = (req,res)=>{
             id: id
         });
     } else {
-        Category.findOne({slug: slug, _id: {'$ne': id}}, function (err, category) {
+       await Category.findOne({slug: slug, _id: {'$ne': id}}, function (err, category) {
             if (category) {
                 req.flash('danger', 'Category title exists, choose another.');
                 res.render('admin/edit_category', {
@@ -103,7 +103,7 @@ const postEditCategory = (req,res)=>{
                     id: id
                 });
             } else {
-                Category.findById(id, function (err, category) {
+                await Category.findById(id, function (err, category) {
                     if (err)
                         return console.log(err);
 
@@ -134,12 +134,12 @@ const postEditCategory = (req,res)=>{
     }
 
 }
-const getDeleteCategory = (req,res)=>{
-    Category.findByIdAndRemove(req.params.id, function (err) {
+const getDeleteCategory = async (req,res)=>{
+    await Category.findByIdAndRemove(req.params.id, function (err) {
         if (err)
             return console.log(err);
 
-        Category.find(function (err, categories) {
+            await Category.find(function (err, categories) {
             if (err) {
                 console.log(err);
             } else {

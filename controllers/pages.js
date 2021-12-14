@@ -14,7 +14,7 @@ const getPage = async(req,res)=>{
 
 const getSlug = async(req,res)=>{
 
-    var slug = req.params.slug;
+    const slug = req.params.slug;
 
     await Page.findOne({slug: slug},  (err, page)=> {
         if (err)
